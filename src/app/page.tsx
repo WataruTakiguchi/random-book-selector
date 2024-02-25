@@ -1,6 +1,10 @@
 "use client";
 import { useState } from "react";
 import axios from "axios";
+import Title from "./components/Title";
+import LoadingMessage from "./components/LoadingMessage";
+import BookDisplay from "./components/BookDisplay";
+import SearchButton from "./components/SearchButton";
 
 const RandomBookSelector = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -75,49 +79,13 @@ const RandomBookSelector = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-3xl font-bold mb-4">Random Book Selector</h1>
-      {isLoading && (
-        <p style={{ fontWeight: "bold", fontSize: "20px" }}>
-          <span role="img" aria-label="glass" className="mr-2">
-            🔎
-          </span>
-          本を探しています...
-        </p>
-      )}
+      <Title />
+      {isLoading && <LoadingMessage />}
       {!isLoading && bookInfo && (
-        <div className="text-center">
-          <h2 className="text-2xl mb-3">以下の本が選ばれました！</h2>
-          <p style={{ fontWeight: "bold", fontSize: "20px" }}>
-            {bookInfo.title}
-          </p>
-          <p style={{ color: "grey", fontSize: "16px" }}>
-            {bookInfo.author}, {bookInfo.publisher},{" "}
-            {bookInfo.pubdate.slice(0, 4) + "/" + bookInfo.pubdate.slice(4)}
-          </p>
-          <div className="flex justify-center items-center">
-            <button
-              className="bg-blue-500 text-white px-4 py-2 m-5 rounded-md flex items-center"
-              onClick={handleBuyButton}
-            >
-              <span role="img" aria-label="wallet" className="mr-2">
-                👛
-              </span>
-              この本を購入
-            </button>
-          </div>
-        </div>
+        <BookDisplay bookInfo={bookInfo} handleBuyButton={handleBuyButton} />
       )}
       {!isLoading && (
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center justify-center mb-2"
-          onClick={fetchBookInfo}
-          disabled={isLoading}
-        >
-          <span role="img" aria-label="book" className="mr-2">
-            📓
-          </span>
-          新しい本に出会う
-        </button>
+        <SearchButton onClick={fetchBookInfo} disabled={isLoading} />
       )}
     </div>
   );
